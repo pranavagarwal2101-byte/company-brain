@@ -1,0 +1,346 @@
+{
+  "teams": [
+    { "name": "Payments", "charter": "Money movement, settlement and reconciliation" },
+    { "name": "Platform", "charter": "Shared infrastructure, gateway and auth" },
+    { "name": "Growth", "charter": "Onboarding, notifications and search" },
+    { "name": "Data", "charter": "Warehouse, audit trail and reporting" },
+    { "name": "SRE", "charter": "Reliability, on-call and incident response" }
+  ],
+
+  "people": [
+    { "name": "Riya Sharma",    "email": "riya.sharma@acme.io",    "role": "Staff Engineer",    "slack": "@riya",    "team": "Payments" },
+    { "name": "Aman Gupta",     "email": "aman.gupta@acme.io",     "role": "Senior Engineer",   "slack": "@aman",    "team": "Payments" },
+    { "name": "Nikhil Rao",     "email": "nikhil.rao@acme.io",     "role": "Engineer",          "slack": "@nikhil",  "team": "Payments" },
+    { "name": "Sara Iyer",      "email": "sara.iyer@acme.io",      "role": "Engineering Manager","slack": "@sara",   "team": "Platform" },
+    { "name": "Daniel Okafor",  "email": "daniel.okafor@acme.io",  "role": "Staff Engineer",    "slack": "@danny",   "team": "Platform" },
+    { "name": "Mei Tanaka",     "email": "mei.tanaka@acme.io",     "role": "Senior Engineer",   "slack": "@mei",     "team": "Platform" },
+    { "name": "Tom Becker",     "email": "tom.becker@acme.io",     "role": "Engineer",          "slack": "@tom",     "team": "Growth" },
+    { "name": "Priya Nair",     "email": "priya.nair@acme.io",     "role": "Senior Engineer",   "slack": "@priya",   "team": "Growth" },
+    { "name": "Jonas Weber",    "email": "jonas.weber@acme.io",    "role": "Engineer",          "slack": "@jonas",   "team": "Growth" },
+    { "name": "Leila Hassan",   "email": "leila.hassan@acme.io",   "role": "Staff Engineer",    "slack": "@leila",   "team": "Data" },
+    { "name": "Victor Alves",   "email": "victor.alves@acme.io",   "role": "Senior Engineer",   "slack": "@victor",  "team": "Data" },
+    { "name": "Grace Lin",      "email": "grace.lin@acme.io",      "role": "Engineer",          "slack": "@grace",   "team": "Data" },
+    { "name": "Omar Haddad",    "email": "omar.haddad@acme.io",    "role": "SRE Lead",          "slack": "@omar",    "team": "SRE" },
+    { "name": "Ines Duarte",    "email": "ines.duarte@acme.io",    "role": "Senior SRE",        "slack": "@ines",    "team": "SRE" },
+    { "name": "Kofi Mensah",    "email": "kofi.mensah@acme.io",    "role": "SRE",               "slack": "@kofi",    "team": "SRE" }
+  ],
+
+  "systems": [
+    { "name": "payments-service",     "type": "service",  "tier": "critical" },
+    { "name": "auth-service",         "type": "service",  "tier": "critical" },
+    { "name": "api-gateway",          "type": "service",  "tier": "critical" },
+    { "name": "notification-service", "type": "service",  "tier": "standard" },
+    { "name": "search-service",       "type": "service",  "tier": "standard" },
+    { "name": "ledger-db",            "type": "database", "tier": "critical" },
+    { "name": "user-store",           "type": "database", "tier": "critical" },
+    { "name": "audit-log",            "type": "datastore","tier": "standard" }
+  ],
+
+  "depends_on": [
+    { "from": "payments-service",     "to": "ledger-db" },
+    { "from": "payments-service",     "to": "auth-service" },
+    { "from": "api-gateway",          "to": "auth-service" },
+    { "from": "notification-service", "to": "payments-service" },
+    { "from": "search-service",       "to": "user-store" },
+    { "from": "auth-service",         "to": "user-store" },
+    { "from": "audit-log",            "to": "ledger-db" },
+    { "from": "api-gateway",          "to": "payments-service" }
+  ],
+
+  "owns": [
+    { "person": "riya.sharma@acme.io",   "system": "payments-service" },
+    { "person": "riya.sharma@acme.io",   "system": "ledger-db" },
+    { "person": "daniel.okafor@acme.io", "system": "auth-service" },
+    { "person": "daniel.okafor@acme.io", "system": "api-gateway" },
+    { "person": "priya.nair@acme.io",    "system": "notification-service" },
+    { "person": "tom.becker@acme.io",    "system": "search-service" },
+    { "person": "leila.hassan@acme.io",  "system": "audit-log" },
+    { "person": "mei.tanaka@acme.io",    "system": "user-store" }
+  ],
+
+  "projects": [
+    { "name": "retry-hardening",      "repo": "acme/payments-service", "year": 2025 },
+    { "name": "idempotency-keys",     "repo": "acme/payments-service", "year": 2025 },
+    { "name": "sso-migration",        "repo": "acme/auth-service",     "year": 2024 },
+    { "name": "gateway-rate-limits",  "repo": "acme/api-gateway",      "year": 2026 },
+    { "name": "notif-batching",       "repo": "acme/notification-svc", "year": 2026 },
+    { "name": "audit-pipeline",       "repo": "acme/audit-log",        "year": 2025 },
+    { "name": "search-reindex",       "repo": "acme/search-service",   "year": 2026 }
+  ],
+
+  "project_uses": [
+    { "project": "retry-hardening",     "system": "payments-service" },
+    { "project": "retry-hardening",     "system": "ledger-db" },
+    { "project": "idempotency-keys",    "system": "payments-service" },
+    { "project": "idempotency-keys",    "system": "ledger-db" },
+    { "project": "sso-migration",       "system": "auth-service" },
+    { "project": "sso-migration",       "system": "user-store" },
+    { "project": "gateway-rate-limits", "system": "api-gateway" },
+    { "project": "gateway-rate-limits", "system": "auth-service" },
+    { "project": "notif-batching",      "system": "notification-service" },
+    { "project": "notif-batching",      "system": "payments-service" },
+    { "project": "audit-pipeline",      "system": "audit-log" },
+    { "project": "audit-pipeline",      "system": "ledger-db" },
+    { "project": "search-reindex",      "system": "search-service" }
+  ],
+
+  "worked_on": [
+    { "person": "riya.sharma@acme.io",   "project": "retry-hardening",     "commits": 48 },
+    { "person": "aman.gupta@acme.io",    "project": "retry-hardening",     "commits": 61 },
+    { "person": "nikhil.rao@acme.io",    "project": "retry-hardening",     "commits": 12 },
+    { "person": "aman.gupta@acme.io",    "project": "idempotency-keys",    "commits": 37 },
+    { "person": "nikhil.rao@acme.io",    "project": "idempotency-keys",    "commits": 29 },
+    { "person": "mei.tanaka@acme.io",    "project": "sso-migration",       "commits": 55 },
+    { "person": "daniel.okafor@acme.io", "project": "sso-migration",       "commits": 22 },
+    { "person": "sara.iyer@acme.io",     "project": "sso-migration",       "commits": 8 },
+    { "person": "daniel.okafor@acme.io", "project": "gateway-rate-limits", "commits": 40 },
+    { "person": "jonas.weber@acme.io",   "project": "gateway-rate-limits", "commits": 17 },
+    { "person": "priya.nair@acme.io",    "project": "notif-batching",      "commits": 44 },
+    { "person": "jonas.weber@acme.io",   "project": "notif-batching",      "commits": 26 },
+    { "person": "aman.gupta@acme.io",    "project": "notif-batching",      "commits": 9 },
+    { "person": "leila.hassan@acme.io",  "project": "audit-pipeline",      "commits": 52 },
+    { "person": "victor.alves@acme.io",  "project": "audit-pipeline",      "commits": 33 },
+    { "person": "grace.lin@acme.io",     "project": "audit-pipeline",      "commits": 19 },
+    { "person": "tom.becker@acme.io",    "project": "search-reindex",      "commits": 31 },
+    { "person": "priya.nair@acme.io",    "project": "search-reindex",      "commits": 14 }
+  ],
+
+  "incidents": [
+    {
+      "id": "INC-212",
+      "title": "Ledger overload from payment retry storm",
+      "occurred_at": "2025-03-14",
+      "severity": "SEV1",
+      "summary": "A downstream timeout caused payments-service to retry five times per request. The retry volume saturated ledger-db connections and caused 42 minutes of failed settlements."
+    },
+    {
+      "id": "INC-287",
+      "title": "Duplicate charges during gateway failover",
+      "occurred_at": "2025-06-02",
+      "severity": "SEV1",
+      "summary": "During an api-gateway failover, retried requests without idempotency keys produced duplicate charges for 1,204 customers."
+    },
+    {
+      "id": "INC-301",
+      "title": "SSO login failures after token format change",
+      "occurred_at": "2024-07-22",
+      "severity": "SEV2",
+      "summary": "A token format change in auth-service broke session validation for users whose records predated the user-store migration."
+    },
+    {
+      "id": "INC-355",
+      "title": "Notification backlog during month-end settlement",
+      "occurred_at": "2026-01-31",
+      "severity": "SEV2",
+      "summary": "notification-service queued 300k payment confirmations during month-end and fell four hours behind, since each confirmation triggered a synchronous call to payments-service."
+    },
+    {
+      "id": "INC-370",
+      "title": "Audit log gap during ledger maintenance",
+      "occurred_at": "2026-02-18",
+      "severity": "SEV3",
+      "summary": "audit-log silently dropped events for 90 minutes while ledger-db was in maintenance mode, leaving a compliance gap."
+    }
+  ],
+
+  "incident_affects": [
+    { "incident": "INC-212", "system": "payments-service" },
+    { "incident": "INC-212", "system": "ledger-db" },
+    { "incident": "INC-287", "system": "payments-service" },
+    { "incident": "INC-287", "system": "api-gateway" },
+    { "incident": "INC-301", "system": "auth-service" },
+    { "incident": "INC-301", "system": "user-store" },
+    { "incident": "INC-355", "system": "notification-service" },
+    { "incident": "INC-355", "system": "payments-service" },
+    { "incident": "INC-370", "system": "audit-log" },
+    { "incident": "INC-370", "system": "ledger-db" }
+  ],
+
+  "incident_participants": [
+    { "person": "omar.haddad@acme.io",   "incident": "INC-212", "role": "incident commander" },
+    { "person": "riya.sharma@acme.io",   "incident": "INC-212", "role": "responder" },
+    { "person": "aman.gupta@acme.io",    "incident": "INC-212", "role": "responder" },
+    { "person": "ines.duarte@acme.io",   "incident": "INC-287", "role": "incident commander" },
+    { "person": "aman.gupta@acme.io",    "incident": "INC-287", "role": "responder" },
+    { "person": "daniel.okafor@acme.io", "incident": "INC-287", "role": "responder" },
+    { "person": "omar.haddad@acme.io",   "incident": "INC-301", "role": "incident commander" },
+    { "person": "mei.tanaka@acme.io",    "incident": "INC-301", "role": "responder" },
+    { "person": "kofi.mensah@acme.io",   "incident": "INC-355", "role": "incident commander" },
+    { "person": "priya.nair@acme.io",    "incident": "INC-355", "role": "responder" },
+    { "person": "ines.duarte@acme.io",   "incident": "INC-370", "role": "incident commander" },
+    { "person": "leila.hassan@acme.io",  "incident": "INC-370", "role": "responder" }
+  ],
+
+  "documents": [
+    {
+      "id": "RFC-47",
+      "title": "Bounded retries for payment settlement",
+      "type": "RFC",
+      "url": "https://wiki.acme.io/rfc/47",
+      "created_at": "2025-03-28",
+      "author": "riya.sharma@acme.io",
+      "body": "Following INC-212 we propose capping settlement retries at three attempts with exponential backoff. Five attempts was chosen arbitrarily in 2023 and under sustained downstream latency it multiplies connection pressure on ledger-db by 5x. Three attempts recovers 97.3% of transient failures in our replay analysis while bounding worst-case ledger load. Anything beyond three should be routed to the dead letter queue for manual settlement."
+    },
+    {
+      "id": "RFC-52",
+      "title": "Idempotency keys for all mutating payment endpoints",
+      "type": "RFC",
+      "url": "https://wiki.acme.io/rfc/52",
+      "created_at": "2025-06-20",
+      "author": "aman.gupta@acme.io",
+      "body": "INC-287 produced duplicate charges because retried requests were indistinguishable from new ones. Every mutating endpoint on payments-service must accept an Idempotency-Key header, persisted in ledger-db with a 24 hour uniqueness window. This interacts with the bounded retry policy from RFC-47: retries are only safe because they are now idempotent."
+    },
+    {
+      "id": "RFC-61",
+      "title": "Asynchronous notification dispatch",
+      "type": "RFC",
+      "url": "https://wiki.acme.io/rfc/61",
+      "created_at": "2026-02-10",
+      "author": "priya.nair@acme.io",
+      "body": "INC-355 showed that synchronous confirmation calls from notification-service into payments-service do not survive month-end volume. We move to batched asynchronous dispatch with a 30 second window, decoupling notification throughput from settlement throughput."
+    },
+    {
+      "id": "RFC-33",
+      "title": "Single sign-on migration plan",
+      "type": "RFC",
+      "url": "https://wiki.acme.io/rfc/33",
+      "created_at": "2024-08-05",
+      "author": "mei.tanaka@acme.io",
+      "body": "Migrate auth-service session handling to SSO with a backward compatible token format. Legacy records in user-store must be backfilled before the old format is retired."
+    },
+    {
+      "id": "POSTMORTEM-212",
+      "title": "Postmortem: INC-212 ledger overload",
+      "type": "postmortem",
+      "url": "https://wiki.acme.io/pm/212",
+      "created_at": "2025-03-17",
+      "author": "omar.haddad@acme.io",
+      "body": "Root cause: unbounded retry amplification under downstream latency. Contributing factor: no circuit breaker between payments-service and ledger-db. Action items: cap retries (see RFC-47), add connection pool alerting, document the settlement dead letter path."
+    },
+    {
+      "id": "POSTMORTEM-287",
+      "title": "Postmortem: INC-287 duplicate charges",
+      "type": "postmortem",
+      "url": "https://wiki.acme.io/pm/287",
+      "created_at": "2025-06-05",
+      "author": "ines.duarte@acme.io",
+      "body": "Root cause: non-idempotent mutating endpoints combined with gateway-level retry on failover. 1,204 customers were double charged and refunded within 48 hours. Action item: idempotency keys (see RFC-52)."
+    },
+    {
+      "id": "RUNBOOK-PAY",
+      "title": "Runbook: payments-service on-call",
+      "type": "runbook",
+      "url": "https://wiki.acme.io/runbook/payments",
+      "created_at": "2025-09-01",
+      "author": "omar.haddad@acme.io",
+      "body": "Settlement failure alerts page the Payments on-call. Check ledger-db connection pool saturation first. Retries are capped at three per RFC-47; if you see more than three attempts for a single payment id, that is a bug, not load. Escalate to the payments-service owner."
+    },
+    {
+      "id": "ADR-09",
+      "title": "Audit events written asynchronously",
+      "type": "ADR",
+      "url": "https://wiki.acme.io/adr/09",
+      "created_at": "2026-03-02",
+      "author": "leila.hassan@acme.io",
+      "body": "INC-370 revealed that audit-log drops events when ledger-db is unavailable. We move audit writes behind a durable queue so maintenance windows no longer create compliance gaps."
+    },
+    {
+      "id": "ONBOARD-PAY",
+      "title": "Payments team onboarding guide",
+      "type": "guide",
+      "url": "https://wiki.acme.io/onboarding/payments",
+      "created_at": "2026-04-12",
+      "author": "nikhil.rao@acme.io",
+      "body": "Start with the settlement flow: api-gateway to payments-service to ledger-db. Read RFC-47 and RFC-52 together, they explain why retries look the way they do. The retry cap is three, and that number has a history."
+    }
+  ],
+
+  "doc_references": [
+    { "from": "RFC-52",          "to": "RFC-47" },
+    { "from": "POSTMORTEM-212",  "to": "RFC-47" },
+    { "from": "POSTMORTEM-287",  "to": "RFC-52" },
+    { "from": "RUNBOOK-PAY",     "to": "RFC-47" },
+    { "from": "ONBOARD-PAY",     "to": "RFC-47" },
+    { "from": "ONBOARD-PAY",     "to": "RFC-52" },
+    { "from": "RFC-61",          "to": "RFC-47" }
+  ],
+
+  "tickets": [
+    { "id": "PAY-1042", "title": "Cap settlement retries at three",            "status": "done",        "created_at": "2025-03-30", "reporter": "riya.sharma@acme.io",  "project": "retry-hardening" },
+    { "id": "PAY-1043", "title": "Add dead letter queue for failed settlement","status": "done",        "created_at": "2025-04-02", "reporter": "aman.gupta@acme.io",   "project": "retry-hardening" },
+    { "id": "PAY-1190", "title": "Idempotency-Key header on all mutations",    "status": "done",        "created_at": "2025-06-22", "reporter": "aman.gupta@acme.io",   "project": "idempotency-keys" },
+    { "id": "PLT-0455", "title": "Backfill legacy user-store records",         "status": "done",        "created_at": "2024-08-14", "reporter": "mei.tanaka@acme.io",   "project": "sso-migration" },
+    { "id": "PLT-0902", "title": "Per-tenant rate limits at the gateway",      "status": "in progress", "created_at": "2026-01-09", "reporter": "daniel.okafor@acme.io","project": "gateway-rate-limits" },
+    { "id": "GRW-0311", "title": "Batch notification dispatch",                "status": "in progress", "created_at": "2026-02-12", "reporter": "priya.nair@acme.io",   "project": "notif-batching" },
+    { "id": "DAT-0188", "title": "Durable queue for audit writes",             "status": "open",        "created_at": "2026-03-04", "reporter": "leila.hassan@acme.io", "project": "audit-pipeline" }
+  ],
+
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "statement": "Settlement retries are capped at three attempts with exponential backoff",
+      "made_at": "2025-04-01",
+      "status": "active",
+      "about_system": "payments-service",
+      "triggered_by": "INC-212",
+      "justified_by": ["RFC-47", "POSTMORTEM-212"],
+      "decided_by": "riya.sharma@acme.io",
+      "supersedes": "DEC-000"
+    },
+    {
+      "id": "DEC-000",
+      "statement": "Settlement retries are capped at five attempts",
+      "made_at": "2023-07-15",
+      "status": "superseded",
+      "about_system": "payments-service",
+      "triggered_by": null,
+      "justified_by": [],
+      "decided_by": "riya.sharma@acme.io",
+      "supersedes": null
+    },
+    {
+      "id": "DEC-002",
+      "statement": "All mutating payment endpoints require an Idempotency-Key header",
+      "made_at": "2025-06-25",
+      "status": "active",
+      "about_system": "payments-service",
+      "triggered_by": "INC-287",
+      "justified_by": ["RFC-52", "POSTMORTEM-287"],
+      "decided_by": "aman.gupta@acme.io",
+      "supersedes": null
+    },
+    {
+      "id": "DEC-003",
+      "statement": "Notification dispatch is asynchronous and batched on a 30 second window",
+      "made_at": "2026-02-14",
+      "status": "active",
+      "about_system": "notification-service",
+      "triggered_by": "INC-355",
+      "justified_by": ["RFC-61"],
+      "decided_by": "priya.nair@acme.io",
+      "supersedes": null
+    },
+    {
+      "id": "DEC-004",
+      "statement": "Audit events are written behind a durable queue, never synchronously",
+      "made_at": "2026-03-05",
+      "status": "active",
+      "about_system": "audit-log",
+      "triggered_by": "INC-370",
+      "justified_by": ["ADR-09"],
+      "decided_by": "leila.hassan@acme.io",
+      "supersedes": null
+    },
+    {
+      "id": "DEC-005",
+      "statement": "auth-service tokens use a backward compatible format during SSO migration",
+      "made_at": "2024-08-10",
+      "status": "active",
+      "about_system": "auth-service",
+      "triggered_by": "INC-301",
+      "justified_by": ["RFC-33"],
+      "decided_by": "mei.tanaka@acme.io",
+      "supersedes": null
+    }
+  ]
+}
